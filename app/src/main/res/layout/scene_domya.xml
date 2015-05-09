@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:weightSum="1"
+        android:layout_marginTop="20dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
+
+        <Button
+            android:layout_width="119dp"
+            android:layout_height="wrap_content"
+            android:text="facebook"
+            android:id="@+id/button_facebook"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.07"
+            android:layout_marginBottom="20dp" />
+
+        <Button
+            android:layout_width="119dp"
+            android:layout_height="wrap_content"
+            android:text="twitter"
+            android:id="@+id/button_twitter"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.05"
+            android:layout_marginBottom="20dp" />
+
+        <Button
+            android:layout_width="114dp"
+            android:layout_height="wrap_content"
+            android:text="LINE"
+            android:id="@+id/button_line"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.05"
+            android:layout_marginBottom="20dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="back"
+            android:id="@+id/button_back"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.07"
+            android:layout_marginBottom="20dp" />
+    </LinearLayout>
+</LinearLayout>
