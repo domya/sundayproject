@@ -1,6 +1,7 @@
 package com.hallelu.jah.sundayproject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ public class MainActivity extends Activity {
         Global.init(this, R.id.main_layout);
 
         Global.sceneManager.push(new SceneMain());
+
     }
 
 
@@ -50,5 +52,10 @@ public class MainActivity extends Activity {
         if( Global.sceneManager.getSceneCount()>1 ){
             Global.sceneManager.pop();
         }
+    }
+    @Override
+     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Global.fbManager.getCallbackManager().onActivityResult(requestCode, resultCode, data);
     }
 }

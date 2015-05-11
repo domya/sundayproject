@@ -1,15 +1,26 @@
 package com.hallelu.jah.sundayproject.controller;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.net.Uri;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.hallelu.jah.sundayproject.R;
 import com.hallelu.jah.sundayproject.core.Global;
 import com.hallelu.jah.sundayproject.core.SceneBase;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by domya on 2015/05/09.
@@ -20,20 +31,67 @@ public class SceneDomya extends SceneBase {
         layoutId = R.layout.scene_domya;
     }
 
+    public LoginButton loginButton;
+
     @Override
     public void init(){
 
         View rootView = getRootView();
 
-        Button facebookButton = (Button)rootView.findViewById(R.id.button_facebook);
-        facebookButton.setOnClickListener(new FacebookClickLister());
-        Button twitterButton = (Button)rootView.findViewById(R.id.button_twitter);
-        twitterButton.setOnClickListener(new TwitterClickLister());
-        Button lineButton = (Button)rootView.findViewById(R.id.button_line);
-        lineButton.setOnClickListener(new LineClickLister());
+        Log.i("SceneDomya", "init");
 
-        Button backButton = (Button)rootView.findViewById(R.id.button_back);
-        backButton.setOnClickListener(new BackClickListener());
+        //簡易連携ボタン系
+        {
+            Button facebookButton = (Button) rootView.findViewById(R.id.button_facebook);
+            facebookButton.setOnClickListener(new FacebookClickLister());
+            Button twitterButton = (Button) rootView.findViewById(R.id.button_twitter);
+            twitterButton.setOnClickListener(new TwitterClickLister());
+            Button lineButton = (Button) rootView.findViewById(R.id.button_line);
+            lineButton.setOnClickListener(new LineClickLister());
+        }
+        //戻るボタン
+        {
+            Button backButton = (Button) rootView.findViewById(R.id.button_back);
+            backButton.setOnClickListener(new BackClickListener());
+        }
+        //show hashボタン
+        {
+            Button showhashButton = (Button) rootView.findViewById(R.id.button_show_hash);
+            showhashButton.setOnClickListener(new ShowhashClickListener());
+        }
+        //FacebookSDK　Loginボタン
+        {
+            loginButton = (LoginButton) getRootView().findViewById(R.id.button_facebook_login);
+            loginButton.setReadPermissions("user_friends");
+            // If using in a fragment
+//        loginButton.setFragment(this);
+            // Other app specific specialization
+
+            //TODO　LoginのCallbackをログインボタンにregister。LoginManagerに登録する場合はそっちにする。
+            // Callback registration
+//            loginButton.registerCallback(Global.fbManager.getCallbackManager(), new FacebookCallback<LoginResult>() {
+            LoginManager.getInstance().registerCallback(Global.fbManager.getCallbackManager(), new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    // App code
+                    Log.d("facebook","logincallback success!!");
+//                    LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("public_profile", "user_friends"));
+                }
+
+                @Override
+                public void onCancel() {
+                    // App code
+                    Log.d("facebook","logincallback cancel!!");
+                }
+
+                @Override
+                public void onError(FacebookException exception) {
+                    // App code
+                    Log.d("facebook","logincallback error!!");
+                }
+            });
+        }
+
     }
 
     class  FacebookClickLister implements View.OnClickListener {
@@ -93,6 +151,28 @@ public class SceneDomya extends SceneBase {
         }
     }
 
+    class ShowhashClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+            Log.i("SceneDomya", "ShowhashClickListener");
+            try {
+                PackageInfo info = getActivity().getPackageManager().getPackageInfo(
+                        "com.hallelu.jah.sundayproject", PackageManager.GET_SIGNATURES); //Your            package name here
+                for (Signature signature : info.signatures) {
+                    MessageDigest md = MessageDigest.getInstance("SHA");
+                    md.update(signature.toByteArray());
+                    Log.i("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.i("SceneDomya", "ShowhashClickListener");
+            } catch (NoSuchAlgorithmException e) {
+                Log.i("SceneDomya", "ShowhashClickListener");
+            }
+        }
+    }
+
 
     // アプリがインストールされているかチェック
     private Boolean isShareAppInstall(String packageName){
@@ -111,4 +191,11 @@ public class SceneDomya extends SceneBase {
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         getActivity().startActivity(intent);
     }
+
+
+
+
+
+
+
 }
